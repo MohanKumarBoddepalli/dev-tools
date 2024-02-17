@@ -79,7 +79,6 @@ const Formatter = () => {
         <Editor
           className="border"
           height="85vh"
-          theme="vs-dark"
           defaultLanguage="sql"
           defaultValue=""
           onMount={handleEditorDidMount}
@@ -88,7 +87,6 @@ const Formatter = () => {
         <Editor
           className="border"
           height="85vh"
-          theme="vs-dark"
           defaultLanguage="sql"
           value={formattedData}
           onMount={handleEditorDidMount}
