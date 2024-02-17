@@ -13,11 +13,22 @@ const CompareText = () => {
         {
           <div>
             <DiffEditor
-              height="62vh"
-              language="javascript"
+              height="92vh"
+              language="text"
               theme="vs-dark"
               original={originalValue}
               modified={referenceValue}
+              options={{
+                originalEditable: true,
+                hideUnchangedRegions: {
+                  enabled: true,
+                  revealLineCount: 2,
+                  minimumLineCount: 1,
+                  contextLineCount: 3,
+                },
+                quickSuggestions: false,
+                diffCodeLens: true,
+              }}
             />
           </div>
         }
