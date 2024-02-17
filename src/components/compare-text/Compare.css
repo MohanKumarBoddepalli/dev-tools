@@ -1,0 +1,37 @@
+.textArea {
+  resize: none;
+  width: 50%;
+  height: 29vh;
+}
+
+.text_wrapper {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 25px;
+}
+
+.center {
+  background-color: #242424;
+  width: auto;
+  text-align: center;
+}
+
+.button {
+  background-color: #04aa6d;
+  border: none;
+  color: white;
+  padding: 10px 30px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 5px;
+  height: 39px;
+}
+
+.margin {
+  margin: 0px 10px 0px 10px;
+}
