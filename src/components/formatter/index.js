@@ -1,5 +1,4 @@
-// CompareText.js
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import Editor from "@monaco-editor/react";
 import { format } from "sql-formatter";
 import "./Format.css";
@@ -30,27 +29,37 @@ const Formatter = () => {
   const [formattedData, setFormattedData] = useState("");
   const [selectedOption, setSelectedOption] = useState("postgresql");
 
+  useEffect(() => {
+    const storedOption = sessionStorage.getItem("sqlOption");
+    const storedSQL = sessionStorage.getItem("sql");
+    setInputData(storedSQL || "");
+    setSelectedOption(storedOption || "postgresql");
+  });
+
   function handleEditorDidMount(editor, monaco) {
     editorRef.current = editor;
   }
 
   const formatData = () => {
-    setFormattedData(
-      format(inputData, {
-        language: selectedOption,
-        tabWidth: 2,
-        keywordCase: "upper",
-        linesBetweenQueries: 2,
-      })
-    );
+    const formatted = format(inputData, {
+      language: selectedOption,
+      tabWidth: 2,
+      keywordCase: "upper",
+      linesBetweenQueries: 2,
+    });
+    setFormattedData(formatted);
+    sessionStorage.setItem("sql", inputData);
   };
 
   const changedData = (data) => {
-    setInputData(data);
+    setInputData(data || "");
+    sessionStorage.setItem("sql", data || "");
   };
 
   const handleSelectChange = (event) => {
-    setSelectedOption(event.target.value || "postgresql");
+    const value = event.target.value || "postgresql";
+    setSelectedOption(value);
+    sessionStorage.setItem("sqlOption", value);
   };
 
   return (
@@ -77,14 +86,16 @@ const Formatter = () => {
         <Editor
           className="border"
           height="85vh"
+          theme="vs-dark"
           defaultLanguage="sql"
-          defaultValue=""
+          defaultValue={inputData}
           onMount={handleEditorDidMount}
           onChange={changedData}
         />
         <Editor
           className="border"
           height="85vh"
+          theme="vs-dark"
           defaultLanguage="sql"
           value={formattedData}
           onMount={handleEditorDidMount}
