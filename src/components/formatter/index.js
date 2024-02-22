@@ -25,16 +25,16 @@ const options = [
 
 const Formatter = () => {
   const editorRef = useRef(null);
-  const [inputData, setInputData] = useState("");
-  const [formattedData, setFormattedData] = useState("");
+  const [inputData, setInputData] = useState(sessionStorage.getItem("sql"));
+  const [formattedData, setFormattedData] = useState(
+    sessionStorage.getItem("FormattedSql")
+  );
   const [selectedOption, setSelectedOption] = useState("postgresql");
 
   useEffect(() => {
     const storedOption = sessionStorage.getItem("sqlOption");
-    const storedSQL = sessionStorage.getItem("sql");
-    setInputData(storedSQL || "");
     setSelectedOption(storedOption || "postgresql");
-  });
+  }, []);
 
   function handleEditorDidMount(editor, monaco) {
     editorRef.current = editor;
@@ -48,6 +48,7 @@ const Formatter = () => {
       linesBetweenQueries: 2,
     });
     setFormattedData(formatted);
+    sessionStorage.setItem("FormattedSql", formatted);
     sessionStorage.setItem("sql", inputData);
   };
 
