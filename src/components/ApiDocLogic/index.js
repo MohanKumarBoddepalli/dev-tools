@@ -41,7 +41,7 @@ function convertObjectToQueryStringWithTypes(params) {
 const getDocRoute = (method, url, queryParams, name) => {
   let docString = "";
   const parseUrl = new URL(url);
-  const path = convertObjectToQueryStringWithTypes(queryParams[0]);
+  const path = convertObjectToQueryStringWithTypes(queryParams);
 
   docString = ` * @api {${method.toUpperCase()}} ${parseUrl.pathname}?${path} ${sentenceCase(name)}\n`;
   return docString;
@@ -84,10 +84,13 @@ const getExamples = (method, url, queryParams) => {
       combineParams += `&${key}=${queryParams[key]}`;
     }
   }
-  return ` *\n * @apiExample Example usage:\n * ${method.toUpperCase()} ${parseUrl.pathname}?${combineParams}\n`
+  return ` *\n * @apiExample Example usage:\n * ${method.toUpperCase()} ${parseUrl.pathname}?${combineParams}\n *`
 };
 
 function generateApiParamsString(params) {
+  if (Object.keys(params) < 1) {
+    return '';
+  }
   const apiParamsString = Object.keys(params)
     .map((key) => {
       const value = params[key];
@@ -97,13 +100,13 @@ function generateApiParamsString(params) {
         } ${key.replace(/\[\]$/, "")}${Array.isArray(value) ? "[]" : ""} ${capitalCase(key)}`;
     })
     .join("\n");
-  return ` *\n${apiParamsString}`;
+  return `\n${apiParamsString}`;
 }
 
 const getBodyDoc = (body, oldkey) => {
   let bodyDoc = "";
-  for (let key in body) {
-    if (typeof body[key] === 'object') {
+  for (const key in body) {
+    if (typeof body[key] === 'object' && !oldkey) {
       bodyDoc += `\n * @apiBody {Object} ${key} Object for ${noCase(key)} data`
       bodyDoc += getBodyDoc(body[key], key);
     } else {
@@ -125,8 +128,8 @@ function generateApiSuccessExample(responseObject, isArray) {
 
   const jsDocComment = `
  * @apiSuccessExample Success-Response:
- *  HTTP/1.1 201 Created
- *    ${exampleResponse.split('\n').join('\n *    ')}`;
+ *   HTTP/1.1 201 Created
+ *     ${exampleResponse.split('\n').join('\n *     ')}`;
 
   return jsDocComment;
 }
@@ -146,6 +149,7 @@ export const generateDocs = ({
     groupName,
     description,
   },
+  response
 }) => {
 
   if (!method || !url) {
@@ -158,10 +162,10 @@ export const generateDocs = ({
   docs += getApiVersion(version);
   docs += getGroupName(groupName);
   docs += getDescription(description);
-  docs += getExamples(method, url, queryParams[0]);
-  docs += generateApiParamsString(queryParams[0])
+  docs += getExamples(method, url, queryParams);
+  docs += generateApiParamsString(queryParams)
   docs += getBodyDoc(body);
-  docs += generateApiSuccessExample(body, Array.isArray(body));
+  docs += generateApiSuccessExample(response, Array.isArray(body));
   docs += getError(method, groupName)
   docs += `\n */`;
   return docs;

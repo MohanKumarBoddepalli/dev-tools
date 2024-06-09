@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   HashRouter as Router,
   Route,
@@ -7,6 +7,7 @@ import {
   useNavigate
 } from "react-router-dom";
 import Postman from "./modules/Postman";
+import SqlFormatter from "./components/SqlFormat/SqlFormat";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 
 const list = [
@@ -23,16 +24,19 @@ const list = [
     panel: <div>header</div>,
   },
   {
-    slug: "format-sql",
-    title: "format-sql",
+    slug: "Format-sql",
+    title: "Format-sql",
     route: "format-sql",
-    panel: <div>body</div>,
+    panel: <SqlFormatter />,
 
   },
 ];
+const route = window.location.hash.slice(2);
+let defaultTab = list.findIndex(item => item.route === route);
 
 const TabContent = () => {
   const navigate = useNavigate();
+
   const handleTabSelect = (index) => {
     const selectedTab = list[index];
     navigate(selectedTab.route);
@@ -43,6 +47,7 @@ const TabContent = () => {
       forceRenderTabPanel
       selectedTabClassName="border-b-2 text-orange-600"
       onSelect={handleTabSelect}
+      defaultIndex={defaultTab}
     >
       <TabList className="flex border border-gray-300 rounded-t-lg">
         {list.map((tab) => (

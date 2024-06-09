@@ -54,14 +54,6 @@ export default function Request({ setResponse, setLoading, loading }) {
       alert('Something is wrong with the JSON data.');
     }
 
-    const apiDoc = generateDocs({
-      url,
-      method: reqMethod,
-      queryParams,
-      body: data,
-      formData
-    });
-
     try {
       const response = await axios({
         url,
@@ -71,8 +63,19 @@ export default function Request({ setResponse, setLoading, loading }) {
         data,
       });
 
+      const queryParamss = convertKeyValueToObject(queryParams);
+      const apiDoc = generateDocs({
+        url,
+        method: reqMethod,
+        queryParams: convertKeyValueToObject(queryParams),
+        body: data,
+        formData,
+        response: response.data
+      });
+
       response.apiDoc = apiDoc;
       setResponse(response);
+
     } catch (e) {
       console.log(e);
       setResponse(e);
