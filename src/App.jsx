@@ -17,12 +17,12 @@ const list = [
     panel: <Postman />,
     route: "api-doc",
   },
-  {
-    slug: "Compare-text",
-    title: "Compare-text",
-    route: "compare-text",
-    panel: <div>header</div>,
-  },
+  // {
+  //   slug: "Compare-text",
+  //   title: "Compare-text",
+  //   route: "compare-text",
+  //   panel: <div>header</div>,
+  // },
   {
     slug: "Format-sql",
     title: "Format-sql",
